@@ -174,12 +174,13 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
-	
+	/*
 	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
 	Entry* ptrToEntry = checkTreeResult;
 	
 	return ptrToEntry;//was checkTreeResult
-	
+	*/
+	return checkTree(x, y, k, true)->data_;
 }
 
 

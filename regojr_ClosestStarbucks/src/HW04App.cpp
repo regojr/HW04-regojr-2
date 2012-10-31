@@ -108,7 +108,7 @@ void HW04App::setup()
 
 	console() << "Algorithm Complete. " << endl;
 
-	console() << "Results Yielded		" //<< (*location).identifier 
+	console() << "Results Yielded		" << rsb.getNearest(0.1234567, 0.1234567)->identifier 
 		<< "	as the closest Starbucks to your location." << endl; 
 	
 }
