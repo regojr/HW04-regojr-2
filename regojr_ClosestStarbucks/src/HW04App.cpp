@@ -89,10 +89,10 @@ void HW04App::setup()
 	numStarbucks = 0;
 	Entry* entries = locationReader();
 	rsb = new regojrStarbucks();
-	rsb->build(entries, numStarbucks);
-	
-	cout << "Setup Complete" << endl;
-	cout << "THE NEAREST STARBUCKS: " << rsb->getNearest(0.1234567, 0.1234567)->identifier << endl;
+	rsb->build(entries, numStarbucks);	
+	Entry* test = rsb->getNearest(0.1234567, 0.1234567);
+	console() << "Setup Complete" << endl;
+	//console() << "THE NEAREST STARBUCKS: " << test->identifier << endl; 
 }
 /*
 void HW04App::mouseDown( MouseEvent event )

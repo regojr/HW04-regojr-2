@@ -158,7 +158,7 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
-	//cout << "CLOSEST REVEALED"<< endl;
+
 	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
 	cout << "NEAREST: " << checkTreeResult->identifier << endl;
 	return checkTreeResult;

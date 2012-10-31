@@ -32,5 +32,5 @@ private:
 	//kdnode* k;
 	double x;
 	double y;
-
+	regojrStarbucks* rsb;
 };
