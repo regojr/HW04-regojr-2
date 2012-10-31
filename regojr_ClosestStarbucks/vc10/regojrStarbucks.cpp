@@ -59,23 +59,31 @@ kdnode* regojrStarbucks::insert(Entry* e, kdnode* k, bool xLevel)
 
 double regojrStarbucks::calculateDistance( double x, double y, kdnode* k)
 {
-	double aSq = (x - k->data_->x) * (x - k->data_->x);
-	double bSq = (y - k->data_->y) * (y - k->data_->y);
-	return sqrt(aSq + bSq);
+	if(k == NULL) return 3; //because all points that exist will be closer
+	else {
+		double aSq = abs(x - (k->data_->x)) * abs(x - (k->data_->x));
+		double bSq = abs(y - (k->data_->y)) * abs(y - (k->data_->y));
+		return sqrt(aSq + bSq);
+	}
 }
 
 
 void regojrStarbucks::build(Entry* entry, int n)
 {
+	/*
 	freshEntries = new Entry[n];
 	
 	for( int i = 0; i < n; i++ ) {
 		cout << "added " << i << " entries to structure" << std::endl;
-		freshEntries[i] = entry[i];
+		freshEntries[i].identifier = entry[i].identifier;
+		freshEntries[i].x = entry[i].x;
+		freshEntries[i].y = entry[i].y;
 	}
 	entry = freshEntries;
+	*/
 	k = new kdnode(entry);
-	for( int j = 1; j < n; j++ ) {
+
+	for( int j = 0; j < n; j++ ) {
 		insert( &entry[j], k, true );
 	}
 }
@@ -87,8 +95,8 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 	if((abs(k->data_->x-x)<=0.00001) && (abs(k->data_->y-y)<=0.00001)) 
 		return k;
 
-	kdnode* foundLeft = NULL;
-	kdnode* foundright = NULL;
+	foundLeft = new kdnode();
+	foundRight = new kdnode();
 	
 	//decide which side to search in kd tree
 	if(xLevel){
@@ -125,7 +133,7 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 	}
 	else{
 		if(foundLeft==NULL){
-			if(calculateDistance(x,y,foundright) > calculateDistance(x,y,k))
+			if(calculateDistance(x,y,foundRight) > calculateDistance(x,y,k))
 				foundRight = k;
 			if(abs(y-foundRight->data_->y) < calculateDistance(x,y,foundRight))
 				foundLeft = checkTree(x,y,k->left_,!xLevel);
@@ -152,10 +160,10 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 			return k;
 	}
 	else{
-		double shortestDistance = min(calculateDistance(x,y,k),min(calculateDistance(x,y,foundright),calculateDistance(x,y,foundLeft)));
+		double shortestDistance = min(calculateDistance(x,y,k),min(calculateDistance(x,y,foundRight),calculateDistance(x,y,foundLeft)));
 		if(shortestDistance == calculateDistance(x,y,k))
 			return k;
-		else if(shortestDistance == calculateDistance(x,y,foundright))
+		else if(shortestDistance == calculateDistance(x,y,foundRight))
 			return foundRight;
 		else
 			return foundLeft;
@@ -164,9 +172,9 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
-
-	/*Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
-	cout << "NEAREST: " << checkTreeResult->identifier << endl;
+	/*
+	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
+	console() << "NEAREST: " << checkTreeResult->identifier << endl;
 	*/
 	return checkTree(x, y, k, true)->data_;//was checkTreeResult
 	

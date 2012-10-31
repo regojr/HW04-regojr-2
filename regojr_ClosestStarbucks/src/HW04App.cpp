@@ -48,12 +48,12 @@ void HW04App::locationReader() // was Entry* type
 		getline(fileIn, line, ',');
         double x1;
         fileIn >> x1;
-		console() << x1 << ",";
+		//console() << x1 << ",";
         char comma;
         fileIn.get(comma); //get comma
         double y1;
         fileIn >> y1;
-		console() << y1 << "," << endl;
+		//console() << y1 << "," << endl;
         tester++;
 		test2++;
     }
