@@ -1,13 +1,17 @@
+#include "cinder/app/AppBasic.h"
+#include "cinder/gl/gl.h"
 
 #include "regojrStarbucks.h"
 #include "regojrStarbucks.h"
 #include <cmath>
 #include <stdio.h>
+#include <io.h>
 #include <iostream>
 
 using namespace std;
 
-kdnode::kdnode(){
+
+kdnode::kdnode() {
 	left_  = NULL;
 	right_ = NULL;
 	data_  = NULL;
@@ -23,6 +27,7 @@ regojrStarbucks::regojrStarbucks()
 {
 	k = NULL;
 }
+
 
 regojrStarbucks::~regojrStarbucks(void)
 {
@@ -62,9 +67,10 @@ double regojrStarbucks::calculateDistance( double x, double y, kdnode* k)
 
 void regojrStarbucks::build(Entry* entry, int n)
 {
-	Entry* freshEntries = new Entry[n];
+	freshEntries = new Entry[n];
 	
 	for( int i = 0; i < n; i++ ) {
+		cout << "added " << i << " entries to structure" << std::endl;
 		freshEntries[i] = entry[i];
 	}
 	entry = freshEntries;
@@ -89,57 +95,57 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 		if(k->data_->x > x)
 			foundLeft = checkTree(x,y,k->left_,!xLevel);
 		if(foundLeft == NULL)
-			foundright = checkTree(x,y,k->right_,!xLevel);
+			foundRight = checkTree(x,y,k->right_,!xLevel);
 	}
 	else{
 		if(k->data_->y > y)
 			foundLeft = checkTree(x,y,k->left_,!xLevel);
 		if(foundLeft == NULL)
-			foundright = checkTree(x,y,k->right_,!xLevel);
+			foundRight = checkTree(x,y,k->right_,!xLevel);
 	}
 
-	if(foundLeft == NULL && foundright == NULL)
+	if(foundLeft == NULL && foundRight == NULL)
 		return k;
 
 	//checr if we should checr another side depends on "which side is NULL!!!"
 	if(xLevel){
 		if(foundLeft==NULL){
-			if(calculateDistance(x,y,foundright) > calculateDistance(x,y,k))
-				foundright = k;
+			if(calculateDistance(x,y,foundRight) > calculateDistance(x,y,k))
+				foundRight = k;
 			//checr root and foundLeft, which one is more close, compare that one to ...
-			if(abs(x-foundright->data_->x) < calculateDistance(x,y,foundright))
+			if(abs(x-foundRight->data_->x) < calculateDistance(x,y,foundRight))
 				foundLeft = checkTree(x,y,k->left_,!xLevel);
 		}
-		if(foundright==NULL){
+		if(foundRight==NULL){
 			if(calculateDistance(x,y,foundLeft) > calculateDistance(x,y,k))
 				foundLeft = k;
 			if(abs(x-foundLeft->data_->x) < calculateDistance(x,y,foundLeft))
-				foundright = checkTree(x,y,k->right_,!xLevel);
+				foundRight = checkTree(x,y,k->right_,!xLevel);
 		}
 	}
 	else{
 		if(foundLeft==NULL){
 			if(calculateDistance(x,y,foundright) > calculateDistance(x,y,k))
-				foundright = k;
-			if(abs(y-foundright->data_->y) < calculateDistance(x,y,foundright))
+				foundRight = k;
+			if(abs(y-foundRight->data_->y) < calculateDistance(x,y,foundRight))
 				foundLeft = checkTree(x,y,k->left_,!xLevel);
 		}
-		if(foundright==NULL){
+		if(foundRight==NULL){
 			if(calculateDistance(x,y,foundLeft) > calculateDistance(x,y,k))
 				foundLeft = k;
 			if(abs(y-foundLeft->data_->y) < calculateDistance(x,y,foundLeft))
-				foundright = checkTree(x,y,k->right_,!xLevel);
+				foundRight = checkTree(x,y,k->right_,!xLevel);
 		}
 	}
 
 	//decide which one should be returned
-	if(foundLeft == NULL && foundright != NULL){
-		if(calculateDistance(x,y,k) > calculateDistance(x,y,foundright))
-			return foundright;
+	if(foundLeft == NULL && foundRight != NULL){
+		if(calculateDistance(x,y,k) > calculateDistance(x,y,foundRight))
+			return foundRight;
 		else
 			return k;
 	}
-	else if(foundLeft != NULL && foundright == NULL){
+	else if(foundLeft != NULL && foundRight == NULL){
 		if(calculateDistance(x,y,k) > calculateDistance(x,y,foundLeft))
 			return foundLeft;
 		else
@@ -150,7 +156,7 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 		if(shortestDistance == calculateDistance(x,y,k))
 			return k;
 		else if(shortestDistance == calculateDistance(x,y,foundright))
-			return foundright;
+			return foundRight;
 		else
 			return foundLeft;
 	}
@@ -159,12 +165,11 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
 
-	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
+	/*Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
 	cout << "NEAREST: " << checkTreeResult->identifier << endl;
-	return checkTreeResult;
+	*/
+	return checkTree(x, y, k, true)->data_;//was checkTreeResult
 	
-	//return checked;
-
 }
 
 
