@@ -26,10 +26,13 @@
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="regojrStarbucks.h">
+    <ClInclude Include="..\include\Starbucks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Starbucks.h">
+    <ClInclude Include="..\include\regojrStarbucks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="regojrStarbucks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

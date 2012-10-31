@@ -108,6 +108,7 @@
     <ClCompile Include="regojrStarbucks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\regojrStarbucks.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\include\Starbucks.h" />
     <ClInclude Include="regojrStarbucks.h" />
