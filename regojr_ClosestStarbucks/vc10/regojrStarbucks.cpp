@@ -4,6 +4,7 @@
 #include "regojrStarbucks.h"
 #include "regojrStarbucks.h"
 #include <cmath>
+#include <math.h>
 #include <stdio.h>
 #include <io.h>
 #include <iostream>
@@ -18,14 +19,13 @@ kdnode::kdnode() {
 }
 
 kdnode::kdnode(Entry* e){
-	left_  = NULL;
-	right_ = NULL;
+	left_  = right_ = NULL;
 	data_  = e;
 }
 
 regojrStarbucks::regojrStarbucks()
 {
-	k = NULL;
+	//k = NULL;
 }
 
 
@@ -42,27 +42,28 @@ kdnode* regojrStarbucks::insert(Entry* e, kdnode* k, bool xLevel)
 
 	if( xLevel ) {
 		if( e->x < k->data_->x ) 
-			k->left_ = insert(e, k, !xLevel);
+			k->left_ = insert(e, k->left_, !xLevel);
 		else 
-			k->right_ = insert(e, k, !xLevel);
+			k->right_ = insert(e, k->right_, !xLevel);
 	}
 	else {
 		if(e->y < k->data_->y ) 
-			k->left_ = insert(e, k, !xLevel);
+			k->left_ = insert(e, k->left_, !xLevel);
 		else 
-			k->right_ = insert(e, k, !xLevel);	
+			k->right_ = insert(e, k->right_, !xLevel);	
 	}
 	
 	return k;
 }
 
 
-double regojrStarbucks::calculateDistance( double x, double y, kdnode* k)
+double regojrStarbucks::calculateDistance( double x_, double y_, kdnode* k)
 {
-	if(k == NULL) return 3; //because all points that exist will be closer
+	if(k->data_ == NULL) return 2.0; //because all points that exist will be closer
 	else {
-		double aSq = abs(x - (k->data_->x)) * abs(x - (k->data_->x));
-		double bSq = abs(y - (k->data_->y)) * abs(y - (k->data_->y));
+		double aSq, bSq; 
+		aSq = abs(x_ - (k->data_->x)) * abs(x_ - (k->data_->x));
+		bSq = abs(y_ - (k->data_->y)) * abs(y_ - (k->data_->y));
 		return sqrt(aSq + bSq);
 	}
 }
@@ -70,17 +71,18 @@ double regojrStarbucks::calculateDistance( double x, double y, kdnode* k)
 
 void regojrStarbucks::build(Entry* entry, int n)
 {
-	/*
+	
 	freshEntries = new Entry[n];
 	
 	for( int i = 0; i < n; i++ ) {
 		cout << "added " << i << " entries to structure" << std::endl;
-		freshEntries[i].identifier = entry[i].identifier;
-		freshEntries[i].x = entry[i].x;
-		freshEntries[i].y = entry[i].y;
+		/*(freshEntries[i]).identifier = (&entry[i])->identifier;
+		(freshEntries[i]).x = (&entry[i])->x;
+		(freshEntries[i]).y = (&entry[i])->y;*/
+		freshEntries[i] = entry[i];
 	}
 	entry = freshEntries;
-	*/
+	
 	k = new kdnode(entry);
 
 	for( int j = 0; j < n; j++ ) {
@@ -95,8 +97,8 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 	if((abs(k->data_->x-x)<=0.00001) && (abs(k->data_->y-y)<=0.00001)) 
 		return k;
 
-	foundLeft = new kdnode();
-	foundRight = new kdnode();
+	foundLeft = NULL;
+	foundRight = NULL;
 	
 	//decide which side to search in kd tree
 	if(xLevel){
@@ -172,11 +174,11 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
-	/*
+	
 	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
-	console() << "NEAREST: " << checkTreeResult->identifier << endl;
-	*/
-	return checkTree(x, y, k, true)->data_;//was checkTreeResult
+	Entry* ptrToEntry = checkTreeResult;
+	
+	return ptrToEntry;//was checkTreeResult
 	
 }
 

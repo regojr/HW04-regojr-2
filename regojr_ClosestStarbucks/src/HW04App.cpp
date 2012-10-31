@@ -21,24 +21,24 @@ class HW04App : public AppBasic {
 		//void mouseDown( MouseEvent event );	
 		//void update();
 		void draw();
-		Entry* entries; // was private
-
+		//Entry* entries; // was private
+		void locationReader(Entry** entries, int* length); // was Entry*
 private:
-	void locationReader(); // was Entry*
-	Entry* location; // freshly added
-	regojrStarbucks rsb;
-	int numStarbucks;
+		
+		Entry* location; // freshly added
+		regojrStarbucks rsb;
+		int numStarbucks;
+		int length;
+		Entry* entries;
 	
 };
 
-void HW04App::locationReader() // was Entry* type
+void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 {
 	//Entry* entries;
 	string line, id, x, y;									
-	int index = 0;								// holding array index position
-	int size = 500;								// keeping track of the number of Entry's in the array
+	int index = 0;								// holding array index position							// keeping track of the number of Entry's in the array
 	int tester = 0;
-	double percent = 0;
 	int test2 = 0 ;
 	ifstream fileIn( "../resources/Starbucks_2006.csv");  // file to be read in
 	console() << "Loading .csv file..." << endl;
@@ -60,29 +60,30 @@ void HW04App::locationReader() // was Entry* type
     
 	// Create new array of entries using size
 	ifstream file("C:/Users/Jake/Desktop/CSE274/HW04-regojr/HW04_regojr/resources/Starbucks_2006.csv");
-	entries= new Entry[tester+1];
-	//console() << "Reading entries..." << endl;
+	*entries = new Entry[tester+1];
+
 	// for each spot in array, add values
 	for( int i=0; i < tester; i++ ) {
-		double percent = 100*((double)i/test2);
+
 		
 		getline(file, id, ',');
-		(entries)[i].identifier = id;
+		(*entries)[i].identifier = id;
 
         double xIn;
         file >> xIn;
-        (entries)[i].x = xIn;
+        (*entries)[i].x = xIn;
 
         char comma;
         file.get(comma);
 		
         double yIn;
         file >> yIn;
-        (entries)[i].y = yIn;
+        (*entries)[i].y = yIn;
 
 		// To check values read in
-		console() << "Index: " << (i+1) << "	id: " << (entries)[i].identifier << "; xCoord: " << (entries)[i].x
-				<< "; yCoord: " << (entries)[i].y <<endl;
+		console() << "Index: " << (i+1) << "	id: " << (*entries)[i].identifier
+			<< "; xCoord: " << (*entries)[i].x
+			<< "; yCoord: " << (*entries)[i].y << endl;
 	}
 
 	console() << "Read completed." << endl;
@@ -94,13 +95,13 @@ void HW04App::setup()
 	
 	numStarbucks = 0;
 	console() << "Reading in locations..." << endl;
-	locationReader();
+	locationReader(&entries, &length);
 
 	console() << "Building K-D Tree..." << endl;
 	rsb.build(entries, numStarbucks);	
 	console() << "Build Complete." << endl;
 
-	//delete [] entries;
+	delete [] entries;
 
 	console() << "Running Closest Starbucks Algorithm..." << endl;
 	rsb.getNearest(0.1234567, 0.1234567);

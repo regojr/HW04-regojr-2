@@ -9,29 +9,33 @@ public:
 	kdnode* left_;
 	kdnode* right_;
 	Entry* data_;
+
 	kdnode();
 	kdnode(Entry* e);
 };
 
+
+
 class regojrStarbucks : public Starbucks
 {
 public:
-	kdnode* k;
+	//kdnode* k;
 	kdnode* insert(Entry* e, kdnode* r, bool xLevel);
-	kdnode* foundLeft;
-	kdnode* foundRight;
+	
 	regojrStarbucks(void);
 	virtual void build(Entry* entry, int n);
 	virtual Entry* getNearest(double x, double y);
-	double calculateDistance(double x, double y, kdnode* k);
+	double calculateDistance(double x_, double y_, kdnode* k);
 	kdnode* checkTree(double x, double y, kdnode* k, bool xLevel);
 	~regojrStarbucks(void);
 	Entry* freshEntries;
 
 private:
 	//Entry* location;
-	//kdnode* k;
-	double x;
-	double y;
+	kdnode* k;
+	kdnode* foundLeft;
+	kdnode* foundRight;
+	//double x;
+	//double y;
 	regojrStarbucks* rsb;
 };
