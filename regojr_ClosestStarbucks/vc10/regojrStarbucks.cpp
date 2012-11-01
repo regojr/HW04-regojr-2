@@ -25,9 +25,7 @@ kdnode::kdnode(Entry* e){
 
 regojrStarbucks::regojrStarbucks()
 {
-	//k = NULL;
 }
-
 
 regojrStarbucks::~regojrStarbucks(void)
 {
@@ -35,7 +33,8 @@ regojrStarbucks::~regojrStarbucks(void)
 
 kdnode* regojrStarbucks::insert(Entry* e, kdnode* k, bool xLevel)
 {
-	if( k == NULL) return new kdnode(e);
+	if( k == NULL) 
+		return new kdnode(e);
 
 	if( (abs( k->data_->x - e->x )<=0.00001) && (abs( k->data_->y - e->y )<=0.00001) )
 		return k;
@@ -70,22 +69,17 @@ double regojrStarbucks::calculateDistance( double x_, double y_, kdnode* k)
 
 
 void regojrStarbucks::build(Entry* entry, int n)
-{
-	
-	freshEntries = new Entry[n];
+{	
+	Entry* freshEntries = new Entry[n];
 	
 	for( int i = 0; i < n; i++ ) {
 		cout << "added " << i << " entries to structure" << std::endl;
-		/*(freshEntries[i]).identifier = (&entry[i])->identifier;
-		(freshEntries[i]).x = (&entry[i])->x;
-		(freshEntries[i]).y = (&entry[i])->y;*/
 		freshEntries[i] = entry[i];
 	}
-	entry = freshEntries;
-	
-	k = new kdnode(entry);
 
-	for( int j = 0; j < n; j++ ) {
+	entry = freshEntries;	
+	k = new kdnode(entry);
+	for( int j = 1; j < n; j++ ) {
 		insert( &entry[j], k, true );
 	}
 }
@@ -97,8 +91,8 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 	if((abs(k->data_->x-x)<=0.00001) && (abs(k->data_->y-y)<=0.00001)) 
 		return k;
 
-	foundLeft = NULL;
-	foundRight = NULL;
+	kdnode* foundLeft = NULL;
+	kdnode* foundRight = NULL;
 	
 	//decide which side to search in kd tree
 	if(xLevel){
@@ -122,7 +116,7 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 		if(foundLeft==NULL){
 			if(calculateDistance(x,y,foundRight) > calculateDistance(x,y,k))
 				foundRight = k;
-			//checr root and foundLeft, which one is more close, compare that one to ...
+			//check root and foundLeft, which one is more close, compare that one to ...
 			if(abs(x-foundRight->data_->x) < calculateDistance(x,y,foundRight))
 				foundLeft = checkTree(x,y,k->left_,!xLevel);
 		}
@@ -174,13 +168,13 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
-	/*
+	
 	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
 	Entry* ptrToEntry = checkTreeResult;
 	
 	return ptrToEntry;//was checkTreeResult
-	*/
-	return checkTree(x, y, k, true)->data_;
+	
+	//return checkTree(x, y, k, true)->data_;
 }
 
 

@@ -20,22 +20,23 @@ class regojrStarbucks : public Starbucks
 {
 public:
 	//kdnode* k;
-	kdnode* insert(Entry* e, kdnode* r, bool xLevel);
+	
 	
 	regojrStarbucks(void);
+
 	virtual void build(Entry* entry, int n);
 	virtual Entry* getNearest(double x, double y);
+	
+	~regojrStarbucks(void);
+	
+private:
+	kdnode* insert(Entry* e, kdnode* r, bool xLevel);
 	double calculateDistance(double x_, double y_, kdnode* k);
 	kdnode* checkTree(double x, double y, kdnode* k, bool xLevel);
-	~regojrStarbucks(void);
+	
 	Entry* freshEntries;
-
-private:
-	//Entry* location;
 	kdnode* k;
-	kdnode* foundLeft;
-	kdnode* foundRight;
-	//double x;
-	//double y;
+	double x;
+	double y;
 	regojrStarbucks* rsb;
 };

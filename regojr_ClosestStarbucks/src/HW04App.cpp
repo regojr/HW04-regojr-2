@@ -60,7 +60,7 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
     
 	// Create new array of entries using size
 	ifstream file("../resources/Starbucks_2006.csv");
-	*entries = new Entry[tester+1];
+	*entries = new Entry[tester];
 
 	// for each spot in array, add values
 	for( int i=0; i < tester; i++ ) {
@@ -81,9 +81,10 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
         (*entries)[i].y = yIn;
 
 		// To check values read in
-		console() << "Index: " << (i+1) << "	id: " << (*entries)[i].identifier
-			<< "; xCoord: " << (*entries)[i].x
-			<< "; yCoord: " << (*entries)[i].y << endl;
+		console() << "Index: " << (i) << "	id: " << endl 
+			<< (*entries)[i].identifier << " at: " << &entries[i]->identifier << endl 
+			<< "; xCoord: " << (*entries)[i].x  << " at: " << &entries[i]->x << endl
+			<< "; yCoord: " << (*entries)[i].y << " at:" << &entries[i]->y << endl;
 	}
 
 	console() << "Read completed." << endl;
@@ -102,7 +103,7 @@ void HW04App::setup()
 	console() << "Build Complete." << endl;
 
 	//delete [] entries;
-
+	
 	console() << "Running Closest Starbucks Algorithm..." << endl;
 	rsb.getNearest(0.1234567, 0.1234567);
 
