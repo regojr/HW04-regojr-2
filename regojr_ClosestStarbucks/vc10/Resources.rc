@@ -1,5 +1,6 @@
-#include "Resources.h"
+#include "..\include\Resources.h"
 
 ID ICON "cinder_app_icon.ico"
 
 //RES_MY_RES
+RES_MAP

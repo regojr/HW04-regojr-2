@@ -3,4 +3,6 @@
 #include "Starbucks.h"
 #include "regojrStarbucks.h"
 #include "regojrStarbucks.h"
-//#define RES_MY_RES			CINDER_RESOURCE( ../resources/, image_name.png, 128, IMAGE )
+
+#define RES_MAP					CINDER_RESOURCE( ../resources/, usaOutline.jpg, 129, IMAGE )
+
