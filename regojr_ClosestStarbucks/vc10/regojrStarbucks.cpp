@@ -19,7 +19,8 @@ kdnode::kdnode() {
 }
 
 kdnode::kdnode(Entry* e){
-	left_  = right_ = NULL;
+	left_  = NULL;
+	right_ = NULL;
 	data_  = e;
 }
 
@@ -91,8 +92,8 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 	if((abs(k->data_->x-x)<=0.00001) && (abs(k->data_->y-y)<=0.00001)) 
 		return k;
 
-	kdnode* foundLeft = NULL;
-	kdnode* foundRight = NULL;
+	kdnode* foundLeft = new kdnode();
+	kdnode* foundRight = new kdnode();
 	
 	//decide which side to search in kd tree
 	if(xLevel){
@@ -168,11 +169,13 @@ kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 
 Entry* regojrStarbucks::getNearest(double x, double y)
 {
+	Entry* checkResult = new Entry();
+	checkResult->identifier = "temporary";
+	checkResult->x = x;
+	checkResult->y = y;
 	
-	Entry* checkTreeResult = checkTree(x, y, k, true)->data_;
-	Entry* ptrToEntry = checkTreeResult;
-	
-	return ptrToEntry;//was checkTreeResult
+	checkResult = checkTree(x, y, k, true)->data_;	
+	return checkResult;//was checkTreeResult
 	
 	//return checkTree(x, y, k, true)->data_;
 }

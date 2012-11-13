@@ -23,6 +23,7 @@ class HW04App : public AppBasic {
 		void draw();
 		//Entry* entries; // was private
 		void locationReader(Entry** entries, int* length); // was Entry*
+
 private:
 		
 		Entry* location; // freshly added
@@ -30,70 +31,76 @@ private:
 		int numStarbucks;
 		int length;
 		Entry* entries;
-	
+		
 };
 
 void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 {
-	//Entry* entries;
+
 	string line, id, x, y;									
-	int index = 0;								// holding array index position							// keeping track of the number of Entry's in the array
-	int tester = 0;
-	int test2 = 0 ;
 	ifstream fileIn( "../resources/Starbucks_2006.csv");  // file to be read in
 	console() << "Loading .csv file..." << endl;
 	
 	// console() # entries
 	while( !fileIn.eof() ) {			
 		getline(fileIn, line, ',');
-        double x1;
+        
+		char comma;
+		fileIn.get(comma);
+
+		double x1;
         fileIn >> x1;
 		//console() << x1 << ",";
-        char comma;
-        fileIn.get(comma); //get comma
-        double y1;
+        
+		char comma2;
+        fileIn.get(comma2); //get comma
+        
+		double y1;
         fileIn >> y1;
 		//console() << y1 << "," << endl;
-        tester++;
-		test2++;
+        
+		numStarbucks++;
+
     }
     
+	fileIn.close();
+
 	// Create new array of entries using size
 	ifstream file("../resources/Starbucks_2006.csv");
-	*entries = new Entry[tester];
+	*entries = new Entry[numStarbucks];
 
 	// for each spot in array, add values
-	for( int i=0; i < tester; i++ ) {
-
-		
-		getline(file, id, ',');
-		(*entries)[i].identifier = id;
-
-        double xIn;
-        file >> xIn;
-        (*entries)[i].x = xIn;
-
-        char comma;
-        file.get(comma);
-		
-        double yIn;
-        file >> yIn;
-        (*entries)[i].y = yIn;
-
-		// To check values read in
-		console() << "Index: " << (i) << "	id: " << endl 
-			<< (*entries)[i].identifier << " at: " << &entries[i]->identifier << endl 
-			<< "; xCoord: " << (*entries)[i].x  << " at: " << &entries[i]->x << endl
-			<< "; yCoord: " << (*entries)[i].y << " at:" << &entries[i]->y << endl;
+	for( int i=0; i < numStarbucks; i++ ) {
+		try
+		{		
+			id = "";
+			getline(file, id, ',');
+			(*entries)[i].identifier = id;
+			//console() << "read identifier: "<< id << endl; // For testing
+			char comma;
+			file.get(comma);
+			//console() << "reading in comma: " << comma << endl; // For testing			
+			double xIn;			
+			file >> xIn;
+			(*entries)[i].x = xIn;
+			//console() << "read x: " << xIn << endl; // For testing			
+			file.get(comma);
+			//console() << "reading in comma: " << comma << endl; // For testing		
+			double yIn;
+			file >> yIn;
+			(*entries)[i].y = yIn;
+			//console() << "read in y: " << yIn << endl; // For testing
+		}
+		catch(Exception e) {
+			console() << "EXCEPTION FOUND!@!@!@!" << endl;
+			// For debugging purposes
+		}
 	}
-
 	console() << "Read completed." << endl;
-	//return entries;
 }
 
 void HW04App::setup()
-{
-	
+{	
 	numStarbucks = 0;
 	console() << "Reading in locations..." << endl;
 	locationReader(&entries, &length);
@@ -101,17 +108,14 @@ void HW04App::setup()
 	console() << "Building K-D Tree..." << endl;
 	rsb.build(entries, numStarbucks);	
 	console() << "Build Complete." << endl;
+	//delete [] entries;	
 
-	//delete [] entries;
-	
-	console() << "Running Closest Starbucks Algorithm..." << endl;
-	rsb.getNearest(0.1234567, 0.1234567);
-
+	console() << "Running Closest Starbucks Algorithm..." << endl;	
+	Entry* result = rsb.getNearest(0.1234567, 0.1234567);
 	console() << "Algorithm Complete. " << endl;
+	console() << "Results Yielded: " << result->identifier 
+		<< "  as the closest Starbucks to your location." << endl; 	
 
-	console() << "Results Yielded		" << rsb.getNearest(0.1234567, 0.1234567)->identifier 
-		<< "	as the closest Starbucks to your location." << endl; 
-	
 }
 
 /*
@@ -123,6 +127,7 @@ void HW04App::update()
 {
 }
 */
+
 void HW04App::draw()
 {
 	// clear out the window with black

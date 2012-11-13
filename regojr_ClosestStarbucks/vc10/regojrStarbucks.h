@@ -35,6 +35,7 @@ private:
 	kdnode* checkTree(double x, double y, kdnode* k, bool xLevel);
 	
 	Entry* freshEntries;
+	Entry* checkResult;
 	kdnode* k;
 	double x;
 	double y;
