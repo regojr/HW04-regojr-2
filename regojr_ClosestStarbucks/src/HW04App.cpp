@@ -26,7 +26,7 @@ class HW04App : public AppBasic {
 		void draw();
 		void locationReader( Entry** entries, int* length ); // was Entry*
 		void markBlips( double x, double y, uint8_t* blip_pattern );
-
+		void displayClosest( double mouseX, double mouseY );
 private:		
 		Entry*				location; // freshly added
 		regojrStarbucks		rsb;
@@ -38,16 +38,18 @@ private:
 		//Surface*			mapSurf_;  // the surface to hold the map
 		Surface				usa_pic;
 		gl::Texture*		mapTex_;	// texture to hold map
-
+		gl::Texture*		viewTex_;
 		uint8_t*			my_blips;  // the array to hold the pixel data
 		uint8_t*			blip_data;
 	/***		Screen Dimensions		 ***/
 		static const int kAppWidth		= 1000;
-		static const int kAppHeight		= 501;
+		static const int kAppHeight		= 1000;
 		static const int kTextureSize	= 1024;
 		
 		double	xCoor;
 		double	yCoor;
+		double	mouseX;
+		double	mouseY;
 };
 
 void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
@@ -99,8 +101,8 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 			//console() << "read in y: " << yIn << endl; // For testing
 		
 			/* Once each value is stored, Mark that spot on the map */
-			uint8_t* pda = (usa_pic).getData();  // get the pixel info
-			markBlips( xIn, yIn, pda);
+			uint8_t* pda = (usa_pic).getData();  // get the pixel info		
+			markBlips( xIn, yIn, blip_data );
 		}
 		catch(Exception e) {
 			console() << "EXCEPTION FOUND!@!@!@!" << endl;
@@ -115,21 +117,33 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 */
 void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 {
-	double mHeight = 450;
-	double mWidth  = 900;
 	Color8u blip = Color8u(255,0,0);
 
 	// Convert x and y coordinates to relative map size (500 x 1000 pixels)
-	double blipX	= x * mWidth;
-	double blipY	= y * mHeight;
-	int offset		= (3 * (blipX + blipY * kAppWidth)) * 1000 ;
+	double blipX	= x;// * 1000;
+	double blipY	= y;// * 500;
+
+	int blipLoc		= ( 3 * ( blipX + blipY*kAppWidth) );
 
 	// Change the pixel color to red
-	blip_pattern[(offset/1000)      ]	= blip.r;
-	blip_pattern[(offset/1000) + 1  ]	= blip.g;
-	blip_pattern[(offset/1000) + 2  ]	= blip.b;
+	blip_pattern[(blipLoc)     ]	= blip.r;
+	blip_pattern[(blipLoc) + 1 ]	= blip.g;
+	blip_pattern[(blipLoc) + 2 ]	= blip.b;
+}
 
+/* Prints the identifier of closest starbucks location to the user */
+void HW04App::displayClosest(double mouseX, double mouseY)
+{
+	console() << "MOUSE X: " << mouseX << endl;
+	console() << "MOUSE Y: " << mouseY << endl;
 
+	Entry* thisClose = rsb.getNearest(1-mouseX, mouseY);
+	string thisID = thisClose->identifier;
+	double thisX  = thisClose->x;
+	double thisY  = thisClose->y;
+
+	console() << "Closest Starbucks to this point: " << thisID
+		<< "with Coordinates: (" << thisX << ", " << thisY << ")" << endl;;
 }
 
 void HW04App::prepareSettings( Settings* windowSettings )
@@ -145,8 +159,7 @@ void HW04App::setup()
 	my_blips = new uint8_t[kAppWidth*kAppHeight*3];
 	mapTex_ = new gl::Texture( usa_pic );
 	
-	blip_data = (usa_pic).getData();
-	
+	blip_data = (usa_pic).getData();	
 	/* Setup to add blips */
 	for( int yCoor=0; yCoor<kAppHeight; yCoor++ ){
 		for( int xCoor=0; xCoor<kAppWidth; xCoor++ ){
@@ -159,7 +172,6 @@ void HW04App::setup()
 	numStarbucks = 0;
 	console() << "Reading in locations..." << endl;
 	locationReader(&entries, &length);
-
 	console() << "Building K-D Tree..." << endl;
 	rsb.build(entries, numStarbucks);	
 	console() << "Build Complete." << endl;
@@ -173,12 +185,22 @@ void HW04App::setup()
 
 }
 
+/* Courtesy of Jake Gregg */
 void HW04App::mouseDown( MouseEvent event )
 {
+	double mouseX = 0;
+	double mouseY = 0;
+
+	if( event.isLeft() ) {
+		mouseX = (event.getX()*1.0)/getWindowWidth();
+		mouseY = (event.getY()*1.0)/getWindowHeight();
+	}
+	displayClosest(mouseX, mouseY);
 }
 
 void HW04App::update()
 {
+
 	// Get pixel array info
 	Color8u markBlip = Color8u( 255, 0, 0 );
 	uint8_t* blip_data = usa_pic.getData();
