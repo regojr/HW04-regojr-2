@@ -3,4 +3,4 @@
 ID ICON "cinder_app_icon.ico"
 
 //RES_MY_RES
-RES_MAP
+RES_MAP				IMAGE			"..\\resources\\usaOutline.jpg"

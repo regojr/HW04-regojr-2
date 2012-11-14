@@ -9,6 +9,7 @@
 #include <fstream>
 #include <io.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 
 using namespace ci;
@@ -35,7 +36,8 @@ private:
 		
 	/*** For phase 2 implementation ***/
 		Surface*			mapSurf_;  // the surface to hold the map
-		//gl::Texture*		mapTex_;
+		Surface				usa_pic;
+		gl::Texture*		mapTex_;
 
 		uint8_t*			my_blips;  // the array to hold the pixel data
 
@@ -138,13 +140,14 @@ void HW04App::prepareSettings( Settings* windowSettings )
 void HW04App::setup()
 {	
 	/*********************For Phase 3 Implementation ***********************/
-	//gl::Texture* mapTex = loadAsset( "usaOutline.jpg" );
 	mapSurf_ = new Surface(1000, 500, false);
-	writeImage("usaOutline.jpg", *mapSurf_);
-	Surface usa_pic( loadImage( loadResource( 129, "IMAGE" ) ) );
+	usa_pic( loadImage( loadResource( RES_MAP, "IMAGE" ) ) );
 	uint8_t* blip_data = usa_pic.getData();
+
+	(*mapSurf_).copyFrom( usa_pic, (*mapSurf_).getBounds() );
 	my_blips = new uint8_t[kAppWidth*kAppHeight*3];
-	
+	mapTex_ = new gl::Texture(*mapSurf_);
+
 	/* Setup to add blips */
 	for( int yCoor=0; yCoor<kAppHeight; yCoor++ ){
 		for( int xCoor=0; xCoor<kAppWidth; xCoor++ ){
@@ -179,15 +182,14 @@ void HW04App::update()
 {
 	// Get pixel array info
 	Color8u markBlip = Color8u( 255, 0, 0 );
-	 
-
+	//(*mapTex_).update( *mapSurf_, (*mapSurf_).getBounds() );
 }
 
 
 void HW04App::draw()
 {
 	/* clear out the window with black */
-	gl::clear( Color( 0, 0, 0 ) ); 
+	//gl::clear( Color( 0, 0, 0 ) ); 
 
 	/* Draw the Surface with the map */
 	gl::draw( *mapSurf_ );
