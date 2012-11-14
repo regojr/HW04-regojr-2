@@ -25,7 +25,7 @@ class HW04App : public AppBasic {
 		void update();
 		void draw();
 		void locationReader( Entry** entries, int* length ); // was Entry*
-		void markBlips( double x, double y, uint8_t* pda, uint8_t* blip_pattern );
+		void markBlips( double x, double y, uint8_t* blip_pattern );
 
 private:		
 		Entry*				location; // freshly added
@@ -35,12 +35,12 @@ private:
 		Entry*				entries;
 		
 	/*** For phase 2 implementation ***/
-		Surface*			mapSurf_;  // the surface to hold the map
+		//Surface*			mapSurf_;  // the surface to hold the map
 		Surface				usa_pic;
-		gl::Texture*		mapTex_;
+		gl::Texture*		mapTex_;	// texture to hold map
 
 		uint8_t*			my_blips;  // the array to hold the pixel data
-
+		uint8_t*			blip_data;
 	/***		Screen Dimensions		 ***/
 		static const int kAppWidth		= 1000;
 		static const int kAppHeight		= 501;
@@ -99,8 +99,8 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 			//console() << "read in y: " << yIn << endl; // For testing
 		
 			/* Once each value is stored, Mark that spot on the map */
-			uint8_t* pda = (*mapSurf_).getData();  // get the pixel info
-			markBlips( xIn, yIn, pda, my_blips );
+			uint8_t* pda = (usa_pic).getData();  // get the pixel info
+			markBlips( xIn, yIn, pda);
 		}
 		catch(Exception e) {
 			console() << "EXCEPTION FOUND!@!@!@!" << endl;
@@ -113,11 +113,11 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 /* This method will add a red marking on the map for each Starbucks
    location within the United States
 */
-void HW04App::markBlips( double x, double y, uint8_t* pda, uint8_t* blip_pattern )
+void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 {
-	double mHeight = 500;
-	double mWidth  = 1000;
-	Color8u markBlip = Color8u( 255, 0, 0 );
+	double mHeight = 450;
+	double mWidth  = 900;
+	Color8u blip = Color8u(255,0,0);
 
 	// Convert x and y coordinates to relative map size (500 x 1000 pixels)
 	double blipX	= x * mWidth;
@@ -125,9 +125,10 @@ void HW04App::markBlips( double x, double y, uint8_t* pda, uint8_t* blip_pattern
 	int offset		= (3 * (blipX + blipY * kAppWidth)) * 1000 ;
 
 	// Change the pixel color to red
-	blip_pattern[(offset/1000)     ]	= 255;
-	blip_pattern[(offset/1000) + 1 ]	= 0;
-	blip_pattern[(offset/1000) + 2 ]	= 0;
+	blip_pattern[(offset/1000)      ]	= blip.r;
+	blip_pattern[(offset/1000) + 1  ]	= blip.g;
+	blip_pattern[(offset/1000) + 2  ]	= blip.b;
+
 
 }
 
@@ -140,14 +141,12 @@ void HW04App::prepareSettings( Settings* windowSettings )
 void HW04App::setup()
 {	
 	/*********************For Phase 3 Implementation ***********************/
-	mapSurf_ = new Surface(1000, 500, false);
-	usa_pic( loadImage( loadResource( RES_MAP, "IMAGE" ) ) );
-	uint8_t* blip_data = usa_pic.getData();
-
-	(*mapSurf_).copyFrom( usa_pic, (*mapSurf_).getBounds() );
+	usa_pic = ( loadImage( loadResource( RES_MAP, "IMAGE" ) ) );
 	my_blips = new uint8_t[kAppWidth*kAppHeight*3];
-	mapTex_ = new gl::Texture(*mapSurf_);
-
+	mapTex_ = new gl::Texture( usa_pic );
+	
+	blip_data = (usa_pic).getData();
+	
 	/* Setup to add blips */
 	for( int yCoor=0; yCoor<kAppHeight; yCoor++ ){
 		for( int xCoor=0; xCoor<kAppWidth; xCoor++ ){
@@ -182,7 +181,10 @@ void HW04App::update()
 {
 	// Get pixel array info
 	Color8u markBlip = Color8u( 255, 0, 0 );
-	//(*mapTex_).update( *mapSurf_, (*mapSurf_).getBounds() );
+	uint8_t* blip_data = usa_pic.getData();
+
+	(*mapTex_).update( usa_pic, (usa_pic).getBounds() );
+
 }
 
 
@@ -192,7 +194,7 @@ void HW04App::draw()
 	//gl::clear( Color( 0, 0, 0 ) ); 
 
 	/* Draw the Surface with the map */
-	gl::draw( *mapSurf_ );
+	gl::draw( *mapTex_ );
 
 }
 
