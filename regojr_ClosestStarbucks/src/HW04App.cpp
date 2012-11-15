@@ -102,7 +102,7 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 		
 			/* Once each value is stored, Mark that spot on the map */
 			uint8_t* pda = (usa_pic).getData();  // get the pixel info		
-			markBlips( xIn, yIn, blip_data );
+			markBlips( xIn, yIn, my_blips );
 		}
 		catch(Exception e) {
 			console() << "EXCEPTION FOUND!@!@!@!" << endl;
@@ -126,9 +126,9 @@ void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 	int blipLoc		= ( 3 * ( blipX + blipY*kAppWidth) );
 
 	// Change the pixel color to red
-	blip_pattern[(blipLoc)     ]	= blip.r;
-	blip_pattern[(blipLoc) + 1 ]	= blip.g;
-	blip_pattern[(blipLoc) + 2 ]	= blip.b;
+	blip_pattern[(blipLoc)     ]	= 255;
+	blip_pattern[(blipLoc) + 1 ]	=	0;
+	blip_pattern[(blipLoc) + 2 ]	=	0;
 }
 
 /* Prints the identifier of closest starbucks location to the user */
@@ -192,8 +192,8 @@ void HW04App::mouseDown( MouseEvent event )
 	double mouseY = 0;
 
 	if( event.isLeft() ) {
-		mouseX = (event.getX()/getWindowWidth() )*1.000;
-		mouseY = (event.getY()/getWindowHeight() )*1.000;
+		mouseX = (event.getX()*1.00)/getWindowWidth();
+		mouseY = (event.getY()*1.00)/getWindowHeight();
 	}
 	displayClosest(mouseX, mouseY);
 }
@@ -213,7 +213,7 @@ void HW04App::update()
 void HW04App::draw()
 {
 	/* clear out the window with black */
-	gl::clear( Color( 0, 0, 0 ) ); 
+	//gl::clear( Color( 0, 0, 0 ) ); 
 
 	/* Draw the Surface with the map */
 	gl::draw( *mapTex_ );
