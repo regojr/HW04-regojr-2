@@ -126,9 +126,9 @@ void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 	int blipLoc		= ( 3 * ( blipX + blipY*kAppWidth) );
 
 	// Change the pixel color to red
-	blip_pattern[(blipLoc)      ]	= blip.r;
-	blip_pattern[(blipLoc) + 10 ]	= blip.g;
-	blip_pattern[(blipLoc) + 20 ]	= blip.b;
+	blip_pattern[(blipLoc)     ]	= blip.r;
+	blip_pattern[(blipLoc) + 1 ]	= blip.g;
+	blip_pattern[(blipLoc) + 2 ]	= blip.b;
 }
 
 /* Prints the identifier of closest starbucks location to the user */
@@ -178,7 +178,7 @@ void HW04App::setup()
 	//delete [] entries;	
 
 	console() << "Running Closest Starbucks Algorithm..." << endl;	
-	Entry* resultLocation = rsb.getNearest(0.1234567, 0.1234567);
+	Entry* resultLocation = rsb.getNearest(0.7654321, 0.7654321);
 	console() << "Algorithm Complete. " << endl;
 	console() << "Results Yielded: " << resultLocation->identifier 
 		<< "  as the closest Starbucks to your location." << endl; 	
@@ -192,8 +192,8 @@ void HW04App::mouseDown( MouseEvent event )
 	double mouseY = 0;
 
 	if( event.isLeft() ) {
-		mouseX = (event.getX()*1.0)/getWindowWidth();
-		mouseY = (event.getY()*1.0)/getWindowHeight();
+		mouseX = (event.getX()/getWindowWidth() )*1.000;
+		mouseY = (event.getY()/getWindowHeight() )*1.000;
 	}
 	displayClosest(mouseX, mouseY);
 }
@@ -213,7 +213,7 @@ void HW04App::update()
 void HW04App::draw()
 {
 	/* clear out the window with black */
-	//gl::clear( Color( 0, 0, 0 ) ); 
+	gl::clear( Color( 0, 0, 0 ) ); 
 
 	/* Draw the Surface with the map */
 	gl::draw( *mapTex_ );
