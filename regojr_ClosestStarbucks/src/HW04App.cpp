@@ -102,7 +102,7 @@ void HW04App::locationReader(Entry** entries, int* length) // was Entry* type
 		
 			/* Once each value is stored, Mark that spot on the map */
 			uint8_t* pda = (usa_pic).getData();  // get the pixel info		
-			markBlips( xIn, yIn, my_blips );
+			markBlips( (1.0*xIn)/getWindowWidth(), (1.0*yIn)/getWindowHeight(), pda );
 		}
 		catch(Exception e) {
 			console() << "EXCEPTION FOUND!@!@!@!" << endl;
@@ -120,15 +120,15 @@ void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 	Color8u blip = Color8u(255,0,0);
 
 	// Convert x and y coordinates to relative map size (1000 x 1000 pixels)
-	double blipX	= (x*1.0)/1000;
-	double blipY	= (y*1.0)/1000;
+	double blipX	= x*1.0*getWindowWidth();
+	double blipY	= y*1.0*getWindowHeight();
 
 	int blipLoc		= ( 3 * ( blipX + blipY*kAppWidth) );
 
 	// Change the pixel color to red
-	blip_pattern[(blipLoc)     ]	= 255;
-	blip_pattern[(blipLoc) + 1 ]	=	0;
-	blip_pattern[(blipLoc) + 2 ]	=	0;
+	blip_pattern[(blipLoc)     ]	= blip.r;
+	blip_pattern[(blipLoc) + 1 ]	= blip.g;
+	blip_pattern[(blipLoc) + 2 ]	= blip.b;
 }
 
 /* Prints the identifier of closest starbucks location to the user */
@@ -190,11 +190,11 @@ void HW04App::mouseDown( MouseEvent event )
 {
 	double mouseX = 0;
 	double mouseY = 0;
-
+	
 	if( event.isLeft() ) {
 		mouseX = (event.getX()*1.00)/getWindowWidth();
-		mouseY = (event.getY()*1.00)/getWindowHeight();
-	}
+		mouseY = (event.getY()*1.00)/getWindowHeight() ;
+	} 
 	displayClosest(mouseX, mouseY);
 }
 
