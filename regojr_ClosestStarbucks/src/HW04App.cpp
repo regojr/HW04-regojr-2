@@ -44,7 +44,7 @@ private:
 	/***		Screen Dimensions		 ***/
 		static const int kAppWidth		= 1000;
 		static const int kAppHeight		= 1000;
-		static const int kTextureSize	= 1024;
+		static const int kTextureSize	= 2048;
 		
 		double	xCoor;
 		double	yCoor;
@@ -119,16 +119,16 @@ void HW04App::markBlips( double x, double y, uint8_t* blip_pattern )
 {
 	Color8u blip = Color8u(255,0,0);
 
-	// Convert x and y coordinates to relative map size (500 x 1000 pixels)
-	double blipX	= x;// * 1000;
-	double blipY	= y;// * 500;
+	// Convert x and y coordinates to relative map size (1000 x 1000 pixels)
+	double blipX	= (x*1.0)/1000;
+	double blipY	= (y*1.0)/1000;
 
 	int blipLoc		= ( 3 * ( blipX + blipY*kAppWidth) );
 
 	// Change the pixel color to red
-	blip_pattern[(blipLoc)     ]	= blip.r;
-	blip_pattern[(blipLoc) + 1 ]	= blip.g;
-	blip_pattern[(blipLoc) + 2 ]	= blip.b;
+	blip_pattern[(blipLoc)      ]	= blip.r;
+	blip_pattern[(blipLoc) + 10 ]	= blip.g;
+	blip_pattern[(blipLoc) + 20 ]	= blip.b;
 }
 
 /* Prints the identifier of closest starbucks location to the user */
@@ -137,7 +137,7 @@ void HW04App::displayClosest(double mouseX, double mouseY)
 	console() << "MOUSE X: " << mouseX << endl;
 	console() << "MOUSE Y: " << mouseY << endl;
 
-	Entry* thisClose = rsb.getNearest(1-mouseX, mouseY);
+	Entry* thisClose = rsb.getNearest(mouseX, 1.0-mouseY);
 	string thisID = thisClose->identifier;
 	double thisX  = thisClose->x;
 	double thisY  = thisClose->y;
