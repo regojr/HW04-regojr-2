@@ -31,7 +31,7 @@ regojrStarbucks::regojrStarbucks()
 regojrStarbucks::~regojrStarbucks(void)
 {
 }
-
+/* Cite source: concepts used from jiangy9 */
 kdnode* regojrStarbucks::insert(Entry* e, kdnode* k, bool xLevel)
 {
 	if( k == NULL) 
@@ -85,7 +85,7 @@ void regojrStarbucks::build(Entry* entry, int n)
 	}
 }
 
-
+/* Cite Concept: jiangy9 code concepts */
 kdnode* regojrStarbucks::checkTree(double x, double y, kdnode* k, bool xLevel)
 {
 	if( k == NULL ) return k;
